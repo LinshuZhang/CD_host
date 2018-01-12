@@ -1,5 +1,5 @@
 # coding:utf-8
-
+image_path = 'question.png'
 # 从代理ip网站上总共要爬取的ip页数。一般每页20条，小项目(20-30个代理ip即可完成的)可以设置为1-2页。
 page_num = 1
 
@@ -7,7 +7,7 @@ page_num = 1
 examine_round = 1
 
 # 超时时间。代理ip在测试过程中的超时时间。
-timeout = 1.5
+timeout = 0.6
 
 database_name = 'ip_pool.db'
 # 数据库链接地址
