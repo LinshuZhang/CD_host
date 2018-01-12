@@ -49,6 +49,8 @@ if __name__ == '__main__':
                 white_times += 1
                 question_img = pag.screenshot(region=(40,200,345,310))
                 question_img.save('question.png')
+                send.send_file('question.png')
+                os.remove('question.png')
                 print(" 开始15秒的等待时间")
                 for i in range(15):
                     print(i)
