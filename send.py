@@ -22,5 +22,5 @@ def send_file (name):
     s.close()
 
 if __name__ == '__main__':
-    # target = ('free.ngrok.cc', 16902)
+    target = ('free.ngrok.cc', 16902)
     send_file(image_path)
