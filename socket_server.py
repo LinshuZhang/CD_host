@@ -21,7 +21,7 @@ def socket_service():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(('127.0.0.1', 6777))
+        s.bind(('127.0.0.1', 443))
         s.listen(10)
     except socket.error as msg:
         print(msg)
@@ -37,20 +37,19 @@ def deal_data(conn, addr):
     print('Accept new connection from {0}'.format(addr))
     #conn.settimeout(500)
     conn.send(b'Hi, Welcome to the server!')
-    times = 0
+
     while 1:
         fileinfo_size = struct.calcsize('128sl')
         buf = conn.recv(fileinfo_size)
         if buf:
             filename, filesize = struct.unpack('128sl', buf)
             fn = filename.strip(b'\00')
-            new_filename = os.path.join('./', fn.decode())
+            new_filename = os.path.join('./', 'question.jpg')
             print('file new name is {0}, filesize if {1}'.format(new_filename,
                                                                  filesize))
 
             recvd_size = 0  # 定义已接收文件的大小
             fp = open(new_filename, 'wb')
-            #outputBuffer = BytesIO()
             print('start receiving...')
 
             while not recvd_size == filesize:
@@ -61,12 +60,11 @@ def deal_data(conn, addr):
                     data = conn.recv(filesize - recvd_size)
                     recvd_size = filesize
                 fp.write(data)
-                #outputBuffer.write(data)
-            fp.close()   
-            #outputBuffer.close()
-            times+=1
-            print('end receive...Succeed Times:{}'.format(times))
-            
+            fp.close()
+            print('end receive...')
+        conn.close()
+        break
+
 
 if __name__ == '__main__':
     socket_service()

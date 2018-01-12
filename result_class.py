@@ -126,7 +126,7 @@ class Result(object):
             web_content = requests.get("https://www.baidu.com/s?", params=key, headers=headers, proxies=proxy_url,timeout=1)
         except:
             url = "https://www.baidu.com/s?wd={}".format(keywords)
-            web_content = requests.get(url, headers=headers, timeout=1.5)
+            web_content = requests.get(url, headers=headers, timeout=1)
         return web_content.text
 
     def download_html_page(self,page_url):
