@@ -1,6 +1,6 @@
 # -*- coding=utf-8 -*-
 import socketserver
-
+from config import server_socket_port
 # Format: name_len      --- one byte
 #         name          --- name_len bytes
 #         data          --- variable length
@@ -19,6 +19,6 @@ class MyTCPHandler (socketserver.StreamRequestHandler):
                 print("Out :%s"%name)
 
 if __name__ == '__main__':
-    addr = ('', socket_port)
+    addr = ('', server_socket_port)
     server = socketserver.TCPServer(addr, MyTCPHandler)
     server.serve_forever()

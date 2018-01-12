@@ -3,7 +3,7 @@
 from socket import *
 import os.path
 import sys
-from config import image_path,server_host,socket_port
+from config import image_path,server_host,client_socket_port
 target = (server_host, socket_port)
 
 def get_header (name):
@@ -22,5 +22,5 @@ def send_file (name):
     s.close()
 
 if __name__ == '__main__':
-    target = (server_host, socket_port)
+    target = (server_host, client_socket_port)
     send_file(image_path)

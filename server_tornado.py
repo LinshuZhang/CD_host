@@ -1,6 +1,6 @@
 import tornado.ioloop
 import tornado.web
-from config import http_port
+from config import server_http_port
 # 配置你的操作系统或是进程管理器来开启服务器运行这个程序.
 # 请注意增加打开文件描述符的个数是十分重要的
 # (来避免 “Too many open files”-的错误).
@@ -22,5 +22,5 @@ application = tornado.web.Application([
 if __name__ == "__main__":
     #application.count = 0
     print("Server Start")
-    application.listen(http_port)
+    application.listen(server_http_port)
     tornado.ioloop.IOLoop.instance().start()
