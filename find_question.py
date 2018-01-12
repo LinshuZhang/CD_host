@@ -5,6 +5,7 @@ from Quartz.CoreGraphics import CGMainDisplayID
 import pyautogui as pag
 import send
 import time
+from config import image_path
 
 def get_pixel_color_init():
     global mainID
@@ -48,9 +49,9 @@ if __name__ == '__main__':
                 print("发现题目,获取提示中:{}".format(time.time()))
                 white_times += 1
                 question_img = pag.screenshot(region=(40,200,345,310))
-                question_img.save('question.png')
-                send.send_file('question.png')
-                os.remove('question.png')
+                question_img.save(image_path)
+                send.send_file(image_path)
+                os.remove(image_path)
                 print(" 开始15秒的等待时间")
                 for i in range(15):
                     print(i)

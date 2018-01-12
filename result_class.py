@@ -117,34 +117,33 @@ class Result(object):
     def download_html(self,keywords):
         key = {'wd': keywords}
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0 cb) like Gecko'}
-        if ip_factory.ip_pool:
-            proxy = random.choice(list(ip_factory.ip_pool))
-        else:
-            proxy = None
-        try:
-            proxy_url = {'http': 'http://'+proxy}
-            web_content = requests.get("https://www.baidu.com/s?", params=key, headers=headers, proxies=proxy_url,timeout=1)
-        except:
-            url = "https://www.baidu.com/s?wd={}".format(keywords)
-            web_content = requests.get(url, headers=headers, timeout=1)
+        url = "https://www.baidu.com/s?wd={}".format(keywords)
+        web_content = requests.get(url, headers=headers, timeout=1.5)
+        if web_content.text.__len__() < 250000:
+            if ip_factory.ip_pool:
+                proxy = random.choice(list(ip_factory.ip_pool))
+                try:
+                    proxy_url = {'http': 'http://'+proxy}
+                    web_content = requests.get("https://www.baidu.com/s?", params=key, headers=headers, proxies=proxy_url,timeout=1)
+                except:
+                    print("不能获取网页内容，可能IP被封")
         return web_content.text
 
     def download_html_page(self,page_url):
         url = "https://www.baidu.com"+page_url
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0 cb) like Gecko'}
-        if ip_factory.ip_pool:
-            proxy = random.choice(list(ip_factory.ip_pool))
-        else:
-            proxy = None
-        try:
-            proxy_url = {'http': 'http://'+proxy}
-            web_content = requests.get(url, headers=headers, proxies=proxy_url,timeout=1)
-            return web_content.text
-        except:
-            # 超过3次则删除此proxy
-            url = "https://www.baidu.com{}".format(page_url)
-            web_content = requests.get(url, headers=headers, timeout=1)
-            return web_content.text
+        url = "https://www.baidu.com{}".format(page_url)
+        web_content = requests.get(url, headers=headers, timeout=1.5)
+        if web_content.text.__len__() < 250000:
+            if ip_factory.ip_pool:
+                proxy = random.choice(list(ip_factory.ip_pool))
+                try:
+                    proxy_url = {'http': 'http://'+proxy}
+                    web_content = requests.get(url, headers=headers, proxies=proxy_url,timeout=1)
+                    return web_content.text
+                except:
+                    print("不能获取分页内容，可能IP被封")
+        return web_content.text
 
     def find_answer_from_baidu(self):
         if self.question and self.keywords:

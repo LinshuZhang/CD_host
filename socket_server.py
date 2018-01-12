@@ -1,14 +1,4 @@
-
-#!/usr/bin/env python
 # -*- coding=utf-8 -*-
-
-
-"""
-file: recv.py
-socket service
-"""
-
-
 import socketserver
 
 # Format: name_len      --- one byte
