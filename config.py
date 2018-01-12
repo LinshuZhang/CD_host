@@ -1,13 +1,13 @@
 # coding:utf-8
 # 图片路径
 image_path = 'question.png'
-server_host = '47.100.175.121'
+server_host = '192.168.31.28'
 
 # for client
-client_socket_port = '443'
+client_socket_port = '16902'
 #client_http_port = '80'
 # for server
-server_socket_port = '443'
+server_socket_port = 443
 server_http_port = '80'
 # 从代理ip网站上总共要爬取的ip页数。一般每页20条，小项目(20-30个代理ip即可完成的)可以设置为1-2页。
 page_num = 1

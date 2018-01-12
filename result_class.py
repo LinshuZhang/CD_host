@@ -45,6 +45,7 @@ class Result(object):
                 try:
                     self.find_answer_from_baidu()
                     self.read_result()
+                    print('hello')
                     self.write_msg()
                 except:
                     self.message = "无法在百度上搜索到问题，可能被封锁IP"
@@ -91,7 +92,6 @@ class Result(object):
         self.message = ''.join(results_string)
 
     def add_msg(self):
-        print(self.message)
         with open("results.html",'a') as f:
             f.write(self.message)
 
@@ -122,7 +122,8 @@ class Result(object):
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0 cb) like Gecko'}
         url = "https://www.baidu.com/s?wd={}".format(keywords)
         web_content = requests.get(url, headers=headers, timeout=1.5)
-        if web_content.text.__len__() < 250000:
+        if web_content.text.__len__() < 150000:
+            print("尝试代理")
             if ip_factory.ip_pool:
                 proxy = random.choice(list(ip_factory.ip_pool))
                 try:
@@ -137,7 +138,8 @@ class Result(object):
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0 cb) like Gecko'}
         url = "https://www.baidu.com{}".format(page_url)
         web_content = requests.get(url, headers=headers, timeout=1.5)
-        if web_content.text.__len__() < 250000:
+        if web_content.text.__len__() < 150000:
+            print("尝试代理")
             if ip_factory.ip_pool:
                 proxy = random.choice(list(ip_factory.ip_pool))
                 try:
