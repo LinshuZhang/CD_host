@@ -11,7 +11,7 @@ import tornado.web
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        with open('results.txt','r') as f:
+        with open('results.html','r') as f:
             self.write(f.read())
         #application.count += 1
         #print(application.count)

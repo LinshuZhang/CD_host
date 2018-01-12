@@ -5,13 +5,11 @@ import time
 import json
 import logging
 import random
-import pandas as pd
 #import pyautogui as pag
 from scrapy.selector import Selector
 from scrapy.http import Response
 from urllib import request
 from lxml import etree
-from selenium import webdriver
 from bs4 import BeautifulSoup
 
 from PIL import Image
