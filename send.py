@@ -4,7 +4,7 @@ from socket import *
 import os.path
 import sys
 from config import image_path
-target = ('free.ngrok.cc', 16902)
+target = ('47.100.175.121', 443)
 
 def get_header (name):
     leng = len(name)
@@ -22,5 +22,5 @@ def send_file (name):
     s.close()
 
 if __name__ == '__main__':
-    target = ('free.ngrok.cc', 16902)
+    target = ('47.100.175.121', 443)
     send_file(image_path)
