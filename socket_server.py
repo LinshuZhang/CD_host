@@ -21,7 +21,7 @@ def socket_service():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(('127.0.0.1', 443))
+        s.bind(('127.0.0.1', 80))
         s.listen(10)
     except socket.error as msg:
         print(msg)
@@ -43,8 +43,8 @@ def deal_data(conn, addr):
         buf = conn.recv(fileinfo_size)
         if buf:
             filename, filesize = struct.unpack('128sl', buf)
-            fn = filename.strip(b'\00')
-            new_filename = os.path.join('./', 'question.jpg')
+            fn = filename.strip('\00'.encode())
+            new_filename = os.path.join('./', fn.decode())
             print('file new name is {0}, filesize if {1}'.format(new_filename,
                                                                  filesize))
 
