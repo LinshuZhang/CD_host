@@ -3,8 +3,8 @@
 from socket import *
 import os.path
 import sys
-from config import image_path
-target = ('47.100.175.121', 443)
+from config import image_path,server_host,socket_port
+target = (server_host, socket_port)
 
 def get_header (name):
     leng = len(name)
@@ -22,5 +22,5 @@ def send_file (name):
     s.close()
 
 if __name__ == '__main__':
-    target = ('47.100.175.121', 443)
+    target = (server_host, socket_port)
     send_file(image_path)

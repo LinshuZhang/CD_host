@@ -1,5 +1,14 @@
 # coding:utf-8
+# 图片路径
 image_path = 'question.png'
+
+http_port = '80'
+
+server_host = ''
+
+socket_port = '443'
+
+server_host = 'free.ngrok.cc:16902' # '47.100.175.121'
 # 从代理ip网站上总共要爬取的ip页数。一般每页20条，小项目(20-30个代理ip即可完成的)可以设置为1-2页。
 page_num = 1
 
@@ -10,20 +19,6 @@ examine_round = 1
 timeout = 0.6
 
 database_name = 'ip_pool.db'
-# 数据库链接地址
-host = '127.0.0.1'
-
-# 数据库链接端口
-port = 3306
-
-# 数据库链接用户名
-user = 'root'
-
-# 数据库密码
-passwd = '******'
-
-# 数据库名
-# DB_NAME = 'proxies'
 
 # 表名
 TABLE_NAME = 'valid_ip'

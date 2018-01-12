@@ -19,6 +19,6 @@ class MyTCPHandler (socketserver.StreamRequestHandler):
                 print("Out :%s"%name)
 
 if __name__ == '__main__':
-    addr = ('', 443)
+    addr = ('', socket_port)
     server = socketserver.TCPServer(addr, MyTCPHandler)
     server.serve_forever()

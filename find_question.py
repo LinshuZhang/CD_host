@@ -44,6 +44,7 @@ if __name__ == '__main__':
     white_times = 0
     get_pixel_color_init()
     while True:
+        time.sleep(0.1)
         if is_white(133,63) and is_white(385,505):
             if white_times%2 == 0:
                 print("发现题目,获取提示中:{}".format(time.time()))
@@ -53,13 +54,13 @@ if __name__ == '__main__':
                 send.send_file(image_path)
                 os.remove(image_path)
                 print(" 开始15秒的等待时间")
-                for i in range(15):
+                for i in range(12):
                     print(i)
                     time.sleep(1)
             else:
                 print("答案公布时间")
                 white_times += 1
                 print(" 开始15秒的等待时间")
-                for i in range(15):
+                for i in range(13):
                     print(i)
                     time.sleep(1)
