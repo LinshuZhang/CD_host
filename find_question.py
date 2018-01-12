@@ -3,7 +3,8 @@ import objc, Quartz
 from AppKit import NSBitmapImageRep
 from Quartz.CoreGraphics import CGMainDisplayID
 import pyautogui as pag
-
+import send
+import time
 
 def get_pixel_color_init():
     global mainID
@@ -40,6 +41,7 @@ def is_white(x,y):
 
 if __name__ == '__main__':
     white_times = 0
+    get_pixel_color_init()
     while True:
         if is_white(133,63) and is_white(385,505):
             if white_times%2 == 0:
@@ -47,3 +49,14 @@ if __name__ == '__main__':
                 white_times += 1
                 question_img = pag.screenshot(region=(40,200,345,310))
                 question_img.save('question.png')
+                print(" 开始15秒的等待时间")
+                for i in range(15):
+                    print(i)
+                    time.sleep(1)
+            else:
+                print("答案公布时间")
+                white_times += 1
+                print(" 开始15秒的等待时间")
+                for i in range(15):
+                    print(i)
+                    time.sleep(1)

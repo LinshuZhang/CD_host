@@ -14,7 +14,7 @@ import struct
 def socket_client():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(('127.0.0.1', 443))
+        s.connect(('free.ngrok.cc', 16902))
     except socket.error as msg:
         print(msg)
         sys.exit(1)
@@ -23,7 +23,7 @@ def socket_client():
 
     while 1:
         times = 0
-        filepath = 'question.png'
+        filepath = 'test.txt'
         if os.path.isfile(filepath):
             # 定义定义文件信息。128s表示文件名为128bytes长，l表示一个int或log文件类型，在此为文件大小
             fileinfo_size = struct.calcsize('128sl')
@@ -40,9 +40,9 @@ def socket_client():
                     print('{0} file send over...'.format(filepath))
                     break
                 s.send(data)
-        s.close()
-        os.remove('question.png')
-        break
+            s.close()
+            #os.remove('question.png')
+            break
 
 if __name__ == '__main__':
     socket_client()
