@@ -10,7 +10,6 @@ from scrapy.selector import Selector
 from scrapy.http import Response
 from urllib import request
 from lxml import etree
-from bs4 import BeautifulSoup
 
 from PIL import Image
 from io import BytesIO
