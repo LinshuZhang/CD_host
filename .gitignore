@@ -10,7 +10,7 @@ results.html
 # Icon must end with two \r
 Icon
 *.db
-*png
+*.png
 
 # Thumbnails
 ._*
