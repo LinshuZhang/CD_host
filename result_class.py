@@ -32,40 +32,46 @@ class Result(object):
         self.message = ''
         self.image_path = image_path
         self.image_base64 = self.get_image_base64()
-        self.question,self.keywords = self.analysis_image()
-        for keyword in self.keywords:
-            self.keyword_in_results[keyword]=0
-        self.keywords_results_count = None
+        try:
+            self.question,self.keywords = self.analysis_image()
+        except:
+            self.message = "图片无法识别"
+            self.question = None
+            self.keywords = None
         if self.question and self.keywords:
-            try:
-                self.find_answer_from_baidu()
-                self.read_result()
-                self.write_msg()
-            except:
-                self.message = "无法在百度上搜索到问题，可能被封锁IP"
-                self.write_msg()
-            if self.page_urls:
+            for keyword in self.keywords:
+                self.keyword_in_results[keyword]=0
+            self.keywords_results_count = None
+            if self.question and self.keywords:
                 try:
-                    self.add_answer_count_mul()
+                    self.find_answer_from_baidu()
                     self.read_result()
                     self.write_msg()
                 except:
-                    self.message = "获取其他页的结果时出错"
+                    self.message = "无法在百度上搜索到问题，可能被封锁IP"
+                    self.write_msg()
+                if self.page_urls:
+                    try:
+                        self.add_answer_count_mul()
+                        self.read_result()
+                        self.write_msg()
+                    except:
+                        self.message = "获取其他页的结果时出错"
+                        self.add_msg()
+                else:
+                    self.message = "无法获取其他页的结果"
                     self.add_msg()
             else:
-                self.message = "无法获取其他页的结果"
+                self.message = "无法获取问题和选项"
                 self.add_msg()
-        else:
-            self.message = "无法获取问题和选项"
-            self.add_msg()
 
-        try:
-            self.keywords_results_count = self.results_count()
-            self.read_result()
-            self.add_msg()
-        except:
-            self.message = "无法获取搜索结果数"
-            self.add_msg()
+            try:
+                self.keywords_results_count = self.results_count()
+                self.read_result()
+                self.add_msg()
+            except:
+                self.message = "无法获取搜索结果数"
+                self.add_msg()
 
 
     def read_result(self):
