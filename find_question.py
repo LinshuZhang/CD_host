@@ -6,7 +6,7 @@ from Quartz.CoreGraphics import CGMainDisplayID
 import pyautogui as pag
 import send
 import time
-from config import image_path
+from config import image_path,client_socket_port
 
 def get_pixel_color_init():
     global mainID
@@ -44,6 +44,7 @@ def is_white(x,y):
 if __name__ == '__main__':
     white_times = 0
     get_pixel_color_init()
+    print("开始等待题目")
     while True:
         time.sleep(0.1)
         if is_white(133,63) and is_white(385,505):
@@ -54,13 +55,13 @@ if __name__ == '__main__':
                 question_img.save(image_path)
                 send.send_file(image_path)
                 print(" 开始15秒的等待时间")
-                for i in range(12):
+                for i in range(15):
                     print(i)
                     time.sleep(1)
             else:
                 print("答案公布时间")
                 white_times += 1
-                print(" 开始15秒的等待时间")
+                print(" 开始13秒的等待时间")
                 for i in range(13):
                     print(i)
                     time.sleep(1)

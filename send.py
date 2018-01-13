@@ -4,7 +4,7 @@ from socket import *
 import os.path
 import sys
 from config import image_path,server_host,client_socket_port
-target = (server_host, socket_port)
+target = (server_host, client_socket_port)
 
 def get_header (name):
     leng = len(name)
