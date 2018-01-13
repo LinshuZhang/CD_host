@@ -136,18 +136,17 @@ class Result(object):
     def download_html_page(self,page_url):
         url = "https://www.baidu.com"+page_url
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0 cb) like Gecko'}
-        url = "https://www.baidu.com{}".format(page_url)
-        web_content = requests.get(url, headers=headers, timeout=1.5)
-        if web_content.text.__len__() < 150000:
-            print("尝试代理")
-            if ip_factory.ip_pool:
-                proxy = random.choice(list(ip_factory.ip_pool))
-                try:
-                    proxy_url = {'http': 'http://'+proxy}
-                    web_content = requests.get(url, headers=headers, proxies=proxy_url,timeout=1)
-                    return web_content.text
-                except:
-                    print("不能获取分页内容，可能IP被封")
+        print("尝试代理")
+        if ip_factory.ip_pool:
+            proxy = random.choice(list(ip_factory.ip_pool))
+            try:
+                proxy_url = {'http': 'http://'+proxy}
+                web_content = requests.get(url, headers=headers, proxies=proxy_url,timeout=1)
+                return web_content.text
+            except:
+                url = "https://www.baidu.com{}".format(page_url)
+                web_content = requests.get(url, headers=headers, timeout=1.5)
+                print("不能获取代理内容")
         return web_content.text
 
     def find_answer_from_baidu(self):
