@@ -28,7 +28,7 @@ from ip_pool import ip_factory
 class Result(object):
     def __init__(self,image_path):
         self.keyword_in_results = {} #关键词在结果在出现次数
-        self.message = ''
+        self.message = '服务器已经打开，等待题目出现'
         self.image_path = image_path
         self.image_base64 = self.get_image_base64()
         try:
@@ -49,7 +49,7 @@ class Result(object):
                     self.write_msg()
                 except:
                     self.message = "无法在百度上搜索到问题，可能被封锁IP"
-                    self.write_msg()
+                    self.add_msg()
                 if self.page_urls:
                     try:
                         self.add_answer_count_mul()
