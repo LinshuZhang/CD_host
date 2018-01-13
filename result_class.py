@@ -68,7 +68,7 @@ class Result(object):
             try:
                 self.keywords_results_count = self.results_count()
                 self.read_result()
-                self.add_msg()
+                self.write_msg()
             except:
                 self.message = "无法获取搜索结果数"
                 self.add_msg()
