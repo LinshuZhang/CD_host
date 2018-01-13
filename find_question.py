@@ -54,6 +54,7 @@ if __name__ == '__main__':
                 question_img = pag.screenshot(region=(40,200,345,310))
                 question_img.save(image_path)
                 send.send_file(image_path)
+                print("图片发送完毕: {}".format(time.time()))
                 print(" 开始15秒的等待时间")
                 for i in range(15):
                     print(i)

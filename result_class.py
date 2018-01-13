@@ -120,17 +120,16 @@ class Result(object):
     def download_html(self,keywords):
         key = {'wd': keywords}
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0 cb) like Gecko'}
-        url = "https://www.baidu.com/s?wd={}".format(keywords)
-        web_content = requests.get(url, headers=headers, timeout=1.5)
-        if web_content.text.__len__() < 150000:
-            print("尝试代理")
-            if ip_factory.ip_pool:
-                proxy = random.choice(list(ip_factory.ip_pool))
-                try:
-                    proxy_url = {'http': 'http://'+proxy}
-                    web_content = requests.get("https://www.baidu.com/s?", params=key, headers=headers, proxies=proxy_url,timeout=1)
-                except:
-                    print("不能获取网页内容，可能IP被封")
+        print("尝试代理")
+        if ip_factory.ip_pool:
+            proxy = random.choice(list(ip_factory.ip_pool))
+            try:
+                proxy_url = {'http': 'http://'+proxy}
+                web_content = requests.get("https://www.baidu.com/s?", params=key, headers=headers, proxies=proxy_url,timeout=1)
+            except:
+                url = "https://www.baidu.com/s?wd={}".format(keywords)
+                web_content = requests.get(url, headers=headers, timeout=1)
+                print("不能获取代理内容")
         return web_content.text
 
     def download_html_page(self,page_url):
@@ -145,7 +144,7 @@ class Result(object):
                 return web_content.text
             except:
                 url = "https://www.baidu.com{}".format(page_url)
-                web_content = requests.get(url, headers=headers, timeout=1.5)
+                web_content = requests.get(url, headers=headers, timeout=1)
                 print("不能获取代理内容")
         return web_content.text
 
@@ -164,8 +163,6 @@ class Result(object):
                     for keyword in self.keywords:
                         if keyword in content:
                             self.keyword_in_results[keyword] += 1
-
-
 
     def add_answer_count(self,page_number):
         if self.page_urls.__len__() < (page_number-1):
