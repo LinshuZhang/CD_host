@@ -204,7 +204,7 @@ class Result(object):
 
     def results_count(self):
         pool = ThreadPool()#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
-        results = pool.map(self.first_time_search, range(3))
+        results = pool.map(self.first_time_search, range(4))
         pool.close()
         pool.join()
         return results
