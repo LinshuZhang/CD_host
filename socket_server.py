@@ -27,6 +27,8 @@ class MyTCPHandler (socketserver.StreamRequestHandler):
                 print("已经收到结果删除图片 {}".format(time.time()))
 
 if __name__ == '__main__':
+    with open("results.html",'w') as f:
+        f.write("服务器已经打开等待大会开始")
     addr = ('', server_socket_port)
     server = socketserver.TCPServer(addr, MyTCPHandler)
     server.serve_forever()
