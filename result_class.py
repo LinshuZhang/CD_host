@@ -53,17 +53,6 @@ class Result(object):
                 self.add_msg()
             if self.page_urls:
                 try:
-                    print("并发获取时的开始时间:".format(time.time()))
-                    self.url_pages = self.results_count()[0]
-                    self.keywords_results_count = self.results_count()[1:]
-                    print("并发获取时的结束时间:".format(time.time()))
-                    self.read_result()
-                    self.write_msg()
-                except:
-                    self.message = "无法在百度上搜索到问题，可能被封锁IP"
-                    self.add_msg()
-
-                try:
                     self.add_answer_count_mul()
                     self.read_result()
                     self.write_msg()
@@ -74,14 +63,16 @@ class Result(object):
                 self.message = "无法获取其他页的结果"
                 self.add_msg()
 
-#             try:
-#                 self.keywords_results_count = self.results_count()
-#                 self.read_result()
-#                 self.write_msg()
-#             except:
-#                 self.message = "无法获取搜索结果数"
-#                 self.add_msg()
-
+            try:
+                self.keywords_results_count = self.results_count()
+                self.read_result()
+                self.write_msg()
+            except:
+                self.message = "无法获取搜索结果数"
+                self.add_msg()
+        else:
+            self.message = "无法获取问题和选项"
+            self.add_msg()
 
     def read_result(self):
         if self.keyword_in_results:
@@ -172,7 +163,6 @@ class Result(object):
                     for keyword in self.keywords:
                         if keyword in content:
                             self.keyword_in_results[keyword] += 1
-            return self.page_urls
 
     def add_answer_count(self,page_number):
         if self.page_urls.__len__() < (page_number-1):
@@ -204,15 +194,9 @@ class Result(object):
         result = re.sub("\D",'',content)
         return {keyword:result}
 
-    def first_time_search(self,i):
-        if i == 0:
-            return self.find_answer_from_baidu()
-        else:
-            return self.results_count_sub(self.keywords[i-1])
-
     def results_count(self):
         pool = ThreadPool()#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
-        results = pool.map(self.first_time_search, range(4))
+        results = pool.map(self.results_count_sub, self.keywords)
         pool.close()
         pool.join()
         return results
