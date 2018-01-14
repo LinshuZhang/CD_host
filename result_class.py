@@ -10,7 +10,6 @@ from scrapy.selector import Selector
 from scrapy.http import Response
 from urllib import request
 from lxml import etree
-
 from PIL import Image
 from io import BytesIO
 import base64
@@ -26,62 +25,141 @@ from ip_pool import ip_factory
 # from Quartz.CoreGraphics import CGMainDisplayID
 
 class Result(object):
+
     def __init__(self,image_path):
         self.keyword_in_results = {} #关键词在结果在出现次数
         self.message = '服务器已经打开，等待题目出现'
         self.image_path = image_path
         self.image_base64 = self.get_image_base64()
+        self.is_no = 0
+        self.tuijian = ''
+        self.no_word_set = ['除外','不','非','没']
+        self.keywords_results_count = None
         try:
             self.question,self.keywords = self.analysis_image()
-        except:
+        except BaseException as e:
+            print(e)
             self.message = "图片无法识别"
             self.question = None
             self.keywords = None
         if self.question and self.keywords:
+            print("识别出的题目内容为 {}".format(self.question))
             for keyword in self.keywords:
                 self.keyword_in_results[keyword]=0
-            self.keywords_results_count = None
+
             try:
                 print("开始{}".format(time.time()))
                 self.find_answer_from_baidu()
                 print("结束{}".format(time.time()))
+                try:
+                    self.tuijian = self.get_tuijian()
+                except BaseException as e:
+                    print(e)
                 self.read_result()
                 print('hello')
                 self.write_msg()
-            except:
+            except BaseException as e:
+                print(e)
                 self.message = "无法在百度上搜索到问题，可能被封锁IP"
                 self.add_msg()
-            if self.page_urls:
+
+            try:
+                self.add_answer_count_mul()
                 try:
-                    self.add_answer_count_mul()
-                    self.read_result()
-                    self.write_msg()
-                except:
-                    self.message = "获取其他页的结果时出错"
-                    self.add_msg()
-            else:
-                self.message = "无法获取其他页的结果"
+                    self.tuijian = self.get_tuijian()
+                except BaseException as e:
+                    print(e)
+                self.read_result()
+                self.write_msg()
+            except BaseException as e:
+                print(e)
+                self.message = "获取其他页的结果时出错"
                 self.add_msg()
 
             try:
                 self.keywords_results_count = self.results_count()
+                try:
+                    self.tuijian = self.get_tuijian()
+                except BaseException as e:
+                    print(e)
                 self.read_result()
                 self.write_msg()
-            except:
+            except BaseException as e:
+                print(e)
                 self.message = "无法获取搜索结果数"
                 self.add_msg()
         else:
             self.message = "无法获取问题和选项"
             self.add_msg()
 
+    def is_no_question(self):
+        for no_word in self.no_word_set:
+            if no_word in self.question:
+                return True
+        return False
+
+    def get_tuijian(self):
+        appear_times_tmp = 0.1
+        keyword_tmp = ''
+        if not self.is_no_question():
+            if max(list(self.keyword_in_results.values()))> 0:
+                keyword_tmp = self.keywords[0]
+                if self.keyword_in_results:
+                    for key in self.keyword_in_results[1:]:
+                        if self.keyword_in_results[key] > appear_times_tmp:
+                            keyword_tmp = key
+                            appear_times_tmp = self.keyword_in_results[key]
+                if self.keywords_results_count:
+                    self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
+                    results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+                    if self.keywords_results_count and appear_times_tmp < 3:
+                        for key in self.keywords:
+                            if self.keywords_results_count_dict[key] > results_count_tmp*3:
+                                results_count_tmp = self.keywords_results_count_dict[key]
+                                keyword_tmp = key
+            else:
+                if self.keywords_results_count:
+                    keyword_tmp = self.keywords[0]
+                    self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
+                    results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+                    if self.keywords_results_count and appear_times_tmp < 3:
+                        for key in self.keywords:
+                            if self.keywords_results_count_dict[key] > results_count_tmp:
+                                results_count_tmp = self.keywords_results_count_dict[key]
+                                keyword_tmp = key
+
+        if self.is_no_question(): # 如果是否定问题
+            if max(list(self.keyword_in_results.values()))> 0:
+                keyword_tmp = self.keywords[0]
+                for key in self.keyword_in_results:
+                    if self.keyword_in_results[key] < appear_times_tmp:
+                        keyword_tmp = key
+                        appear_times_tmp = self.keyword_in_results[key]
+
+            if self.keywords_results_count:
+                self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
+                results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+                if key in self.keywords:
+                    if self.keyword_in_results[key] == appear_times_tmp:
+                        if self.keywords_results_count_dict[key] < results_count_tmp:
+                            results_count_tmp = self.keywords_results_count_dict[key]
+                            keyword_tmp = key
+                    results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+
+        return keyword_tmp
+
     def read_result(self):
+        results_string = []
+        if self.tuijian:
+            results_string.append("推荐： {}\n".format(self.tuijian))
         if self.keyword_in_results:
-            results_string = ["搜索中出现次数\n"]
+            results_string.append("搜索中出现次数\n")
             for key in self.keyword_in_results:
                 results_string.append(key)
                 results_string.append(' : ')
                 results_string.append(str(self.keyword_in_results[key]))
                 results_string.append('\n')
+
         if self.keywords_results_count:
             results_string.append("搜索结果数\n")
             for result in self.keywords_results_count:
@@ -105,16 +183,42 @@ class Result(object):
             imgbase64 = base64.b64encode(f.read())
         return imgbase64.decode()
 
+    def clear_str_question(self,string):
+        if string[0] in list(str(i) for i in range(10)):
+            string = string[1:]
+        string = string.replace('(','').replace('《','')\
+        .replace(')','').replace('》',"").replace('（','').replace(')','')\
+        .replace('.','').replace(',',' ').replace('，','')\
+        .replace('<',' ').replace('>',' ')
+        return string
+
+    def clear_str_keyword(self,string):
+        if string[0] in 'ABC':
+            string = string[1:]
+        string = string.replace('(','').replace('《','')\
+        .replace(')','').replace('》',"").replace('（','').replace(')','')\
+        .replace('.','').replace(',',' ').replace('，','')\
+        .replace('<',' ').replace('>',' ')
+        return string
+
     def analysis_image(self):
         res = normal_ocr.ocr(self.image_base64)
         try:
             rets = json.loads(res['outputs'][0]['outputValue']['dataValue'])['ret']
             row_number = rets.__len__()
             content = list(ret['word'] for ret in rets)
-            question = ''.join(content[:(row_number-3)])
-            keywords = content[(row_number-3):]
+            if row_number>3:
+                question = ''.join(content[:(row_number-3)])
+                keywords = content[(row_number-3):]
+            else:
+                question = content[0]
+                keywords = content[1:]
+            question = self.clear_str_question(question)
+
+            keywords = list(map(self.clear_str_keyword,keywords))
             return question,keywords
-        except:
+        except BaseException as e:
+            print(e)
             return None,None
 
     def download_html(self,keywords):
@@ -126,7 +230,8 @@ class Result(object):
             try:
                 proxy_url = {'http': 'http://'+proxy}
                 web_content = requests.get("https://www.baidu.com/s?", params=key, headers=headers, proxies=proxy_url,timeout=1)
-            except:
+            except BaseException as e:
+                print(e)
                 url = "https://www.baidu.com/s?wd={}".format(keywords)
                 web_content = requests.get(url, headers=headers, timeout=1)
                 print("不能获取代理内容")
@@ -142,7 +247,8 @@ class Result(object):
                 proxy_url = {'http': 'http://'+proxy}
                 web_content = requests.get(url, headers=headers, proxies=proxy_url,timeout=1)
                 return web_content.text
-            except:
+            except BaseException as e:
+                print(e)
                 url = "https://www.baidu.com{}".format(page_url)
                 web_content = requests.get(url, headers=headers, timeout=1)
                 print("不能获取代理内容")
