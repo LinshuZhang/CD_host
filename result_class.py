@@ -59,9 +59,6 @@ class Result(object):
                 except:
                     self.message = "获取其他页的结果时出错"
                     self.add_msg()
-                else:
-                    self.message = "无法获取其他页的结果"
-                    self.add_msg()
             else:
                 self.message = "无法获取问题和选项"
                 self.add_msg()
