@@ -151,7 +151,7 @@ class Result(object):
     def read_result(self):
         results_string = []
         if self.tuijian:
-            results_string.append("推荐： {}\n".format(self.tuijian))
+            results_string.append("推荐： {}\n\n".format(self.tuijian))
         if self.keyword_in_results:
             results_string.append("搜索中出现次数\n")
             for key in self.keyword_in_results:
