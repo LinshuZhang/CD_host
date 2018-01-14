@@ -105,7 +105,7 @@ class Result(object):
             if max(list(self.keyword_in_results.values()))> 0:
                 keyword_tmp = self.keywords[0]
                 if self.keyword_in_results:
-                    for key in self.keyword_in_results[1:]:
+                    for key in self.keywords[1:]:
                         if self.keyword_in_results[key] > appear_times_tmp:
                             keyword_tmp = key
                             appear_times_tmp = self.keyword_in_results[key]
