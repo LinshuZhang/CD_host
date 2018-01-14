@@ -43,8 +43,10 @@ class Result(object):
             self.keywords_results_count = None
             if self.question and self.keywords:
                 try:
+                    print("并发获取时的开始时间:".format(time.time()))
                     self.url_pages = self.results_count()[0]
                     self.keywords_results_count = self.results_count()[1:]
+                    print("并发获取时的结束时间:".format(time.time()))
                     self.read_result()
                     print('hello')
                     self.write_msg()
