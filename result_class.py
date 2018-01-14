@@ -41,28 +41,26 @@ class Result(object):
             for keyword in self.keywords:
                 self.keyword_in_results[keyword]=0
             self.keywords_results_count = None
-            if self.question and self.keywords:
+            try:
+                print("开始{}".format(time.time()))
+                self.find_answer_from_baidu()
+                print("结束{}".format(time.time()))
+                self.read_result()
+                print('hello')
+                self.write_msg()
+            except:
+                self.message = "无法在百度上搜索到问题，可能被封锁IP"
+                self.add_msg()
+            if self.page_urls:
                 try:
-                    self.find_answer_from_baidu()
+                    self.add_answer_count_mul()
                     self.read_result()
-                    print('hello')
                     self.write_msg()
                 except:
-                    self.message = "无法在百度上搜索到问题，可能被封锁IP"
-                    self.add_msg()
-                if self.page_urls:
-                    try:
-                        self.add_answer_count_mul()
-                        self.read_result()
-                        self.write_msg()
-                    except:
-                        self.message = "获取其他页的结果时出错"
-                        self.add_msg()
-                else:
-                    self.message = "无法获取其他页的结果"
+                    self.message = "获取其他页的结果时出错"
                     self.add_msg()
             else:
-                self.message = "无法获取问题和选项"
+                self.message = "无法获取其他页的结果"
                 self.add_msg()
 
             try:
@@ -72,7 +70,9 @@ class Result(object):
             except:
                 self.message = "无法获取搜索结果数"
                 self.add_msg()
-
+        else:
+            self.message = "无法获取问题和选项"
+            self.add_msg()
 
     def read_result(self):
         if self.keyword_in_results:
