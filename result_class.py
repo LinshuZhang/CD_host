@@ -33,7 +33,7 @@ class Result(object):
         self.image_base64 = self.get_image_base64()
         self.is_no = 0
         self.tuijian = ''
-        self.no_word_set = ['除外','不','非','没']
+        self.no_word_set = ['除外','不','并非','没']
         self.keywords_results_count = None
         try:
             self.question,self.keywords = self.analysis_image()
