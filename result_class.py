@@ -32,8 +32,10 @@ class Result(object):
         self.image_path = image_path
         self.image_base64 = self.get_image_base64()
         self.is_no = 0
+        self.zhuci_set = ['下列','选项','哪个','哪一','那一','那个','什么','是指','是','的','在','从',\
+        '中有','即','主要','次要','和','有关','无关','与','其中']
         self.tuijian = ''
-        self.no_word_set = ['除外','不','并非','没']
+        self.no_word_set = ['除外','不是','并非','没有']
         self.keywords_results_count = None
         try:
             self.question,self.keywords = self.analysis_image()
@@ -95,17 +97,18 @@ class Result(object):
     def is_no_question(self):
         for no_word in self.no_word_set:
             if no_word in self.question:
+                self.question = self.question.replace(no_word,'+')
                 return True
         return False
 
     def get_tuijian(self):
         appear_times_tmp = 0.1
         keyword_tmp = ''
-        if not self.is_no_question():
+        if not self.is_no:
             if max(list(self.keyword_in_results.values()))> 0:
                 keyword_tmp = self.keywords[0]
                 if self.keyword_in_results:
-                    for key in self.keywords[1:]:
+                    for key in self.keywords:
                         if self.keyword_in_results[key] > appear_times_tmp:
                             keyword_tmp = key
                             appear_times_tmp = self.keyword_in_results[key]
@@ -128,7 +131,7 @@ class Result(object):
                                 results_count_tmp = self.keywords_results_count_dict[key]
                                 keyword_tmp = key
 
-        if self.is_no_question(): # 如果是否定问题
+        if self.is_no: # 如果是否定问题
             if max(list(self.keyword_in_results.values()))> 0:
                 keyword_tmp = self.keywords[0]
                 for key in self.keyword_in_results:
@@ -190,6 +193,9 @@ class Result(object):
         .replace(')','').replace('》',"").replace('（','').replace(')','')\
         .replace('.','').replace(',',' ').replace('，','')\
         .replace('<',' ').replace('>',' ')
+        for zhuci in self.zhuci_set:
+            if zhuci in string:
+                string.replace(zhuci,'+')
         return string
 
     def clear_str_keyword(self,string):
@@ -213,6 +219,7 @@ class Result(object):
             else:
                 question = content[0]
                 keywords = content[1:]
+            self.is_no = self.is_no_question()
             question = self.clear_str_question(question)
 
             keywords = list(map(self.clear_str_keyword,keywords))
