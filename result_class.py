@@ -102,11 +102,12 @@ class Result(object):
         return False
 
     def get_tuijian(self):
-        appear_times_tmp = 0.1
+        appear_times_tmp = 0
         keyword_tmp = ''
         if not self.is_no:
             if max(list(self.keyword_in_results.values()))> 0:
                 keyword_tmp = self.keywords[0]
+                appear_times_tmp = self.keyword_in_results[keyword_tmp]
                 if self.keyword_in_results:
                     for key in self.keywords:
                         if self.keyword_in_results[key] > appear_times_tmp:
@@ -115,21 +116,18 @@ class Result(object):
                 if self.keywords_results_count:
                     self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
                     results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
-                    if self.keywords_results_count and appear_times_tmp < 3:
-                        for key in self.keywords:
-                            if self.keywords_results_count_dict[key] > results_count_tmp*3:
-                                results_count_tmp = self.keywords_results_count_dict[key]
-                                keyword_tmp = key
+                    for key in self.keywords:
+                        if self.keywords_results_count_dict[key] > results_count_tmp*3:
+                            results_count_tmp = self.keywords_results_count_dict[key]
+                            keyword_tmp = key
             else:
                 if self.keywords_results_count:
-                    keyword_tmp = self.keywords[0]
                     self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
                     results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
-                    if self.keywords_results_count and appear_times_tmp < 3:
-                        for key in self.keywords:
-                            if self.keywords_results_count_dict[key] > results_count_tmp:
-                                results_count_tmp = self.keywords_results_count_dict[key]
-                                keyword_tmp = key
+                    for key in self.keywords:
+                        if self.keywords_results_count_dict[key] > results_count_tmp:
+                            results_count_tmp = self.keywords_results_count_dict[key]
+                            keyword_tmp = key
 
         if self.is_no: # 如果是否定问题
             if max(list(self.keyword_in_results.values()))> 0:
@@ -142,13 +140,12 @@ class Result(object):
             if self.keywords_results_count:
                 self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
                 results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+                appear_times_tmp = self.keyword_in_results[keyword_tmp]
                 if key in self.keywords:
-                    if self.keyword_in_results[key] == appear_times_tmp:
+                    if self.keyword_in_results[key] == 0:
                         if self.keywords_results_count_dict[key] < results_count_tmp:
                             results_count_tmp = self.keywords_results_count_dict[key]
                             keyword_tmp = key
-                    results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
-
         return keyword_tmp
 
     def read_result(self):
@@ -195,7 +192,7 @@ class Result(object):
         .replace('<',' ').replace('>',' ')
         for zhuci in self.zhuci_set:
             if zhuci in string:
-                string.replace(zhuci,'+')
+                string = string.replace(zhuci,'+')
         return string
 
     def clear_str_keyword(self,string):
@@ -214,16 +211,15 @@ class Result(object):
             row_number = rets.__len__()
             content = list(ret['word'] for ret in rets)
             if row_number>3:
-                question = ''.join(content[:(row_number-3)])
-                keywords = content[(row_number-3):]
+                self.question = ''.join(content[:(row_number-3)])
+                self.keywords = content[(row_number-3):]
             else:
-                question = content[0]
-                keywords = content[1:]
+                self.question = content[0]
+                self.keywords = content[1:]
             self.is_no = self.is_no_question()
-            question = self.clear_str_question(question)
-
-            keywords = list(map(self.clear_str_keyword,keywords))
-            return question,keywords
+            self.question = self.clear_str_question(self.question)
+            self.keywords = list(map(self.clear_str_keyword,self.keywords))
+            return self.question,self.keywords
         except BaseException as e:
             print(e)
             return None,None
