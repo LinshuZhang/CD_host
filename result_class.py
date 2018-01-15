@@ -32,8 +32,10 @@ class Result(object):
         self.image_path = image_path
         self.image_base64 = self.get_image_base64()
         self.is_no = 0
+        self.zhuci_set = ['下列','选项','哪个','哪一','那一','那个','什么','是指','是','的','在','从',\
+        '中有','即','主要','次要','和','有关','无关','与','其中']
         self.tuijian = ''
-        self.no_word_set = ['除外','不','并非','没']
+        self.no_word_set = ['除外','不是','并非','没有']
         self.keywords_results_count = None
         try:
             self.question,self.keywords = self.analysis_image()
@@ -51,10 +53,10 @@ class Result(object):
                 print("开始{}".format(time.time()))
                 self.find_answer_from_baidu()
                 print("结束{}".format(time.time()))
-                try:
-                    self.tuijian = self.get_tuijian()
-                except BaseException as e:
-                    print(e)
+                # try:
+                #     self.tuijian = self.get_tuijian()
+                # except BaseException as e:
+                #     print(e)
                 self.read_result()
                 print('hello')
                 self.write_msg()
@@ -65,10 +67,10 @@ class Result(object):
 
             try:
                 self.add_answer_count_mul()
-                try:
-                    self.tuijian = self.get_tuijian()
-                except BaseException as e:
-                    print(e)
+                # try:
+                #     self.tuijian = self.get_tuijian()
+                # except BaseException as e:
+                #     print(e)
                 self.read_result()
                 self.write_msg()
             except BaseException as e:
@@ -78,10 +80,10 @@ class Result(object):
 
             try:
                 self.keywords_results_count = self.results_count()
-                try:
-                    self.tuijian = self.get_tuijian()
-                except BaseException as e:
-                    print(e)
+                # try:
+                #     self.tuijian = self.get_tuijian()
+                # except BaseException as e:
+                #     print(e)
                 self.read_result()
                 self.write_msg()
             except BaseException as e:
@@ -92,61 +94,59 @@ class Result(object):
             self.message = "无法获取问题和选项"
             self.add_msg()
 
-    def is_no_question(self):
-        for no_word in self.no_word_set:
-            if no_word in self.question:
-                return True
-        return False
+    # def is_no_question(self):
+    #     for no_word in self.no_word_set:
+    #         if no_word in self.question:
+    #             self.question = self.question.replace(no_word,'+')
+    #             return True
+    #     return False
 
-    def get_tuijian(self):
-        appear_times_tmp = 0.1
-        keyword_tmp = ''
-        if not self.is_no_question():
-            if max(list(self.keyword_in_results.values()))> 0:
-                keyword_tmp = self.keywords[0]
-                if self.keyword_in_results:
-                    for key in self.keywords[1:]:
-                        if self.keyword_in_results[key] > appear_times_tmp:
-                            keyword_tmp = key
-                            appear_times_tmp = self.keyword_in_results[key]
-                if self.keywords_results_count:
-                    self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
-                    results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
-                    if self.keywords_results_count and appear_times_tmp < 3:
-                        for key in self.keywords:
-                            if self.keywords_results_count_dict[key] > results_count_tmp*3:
-                                results_count_tmp = self.keywords_results_count_dict[key]
-                                keyword_tmp = key
-            else:
-                if self.keywords_results_count:
-                    keyword_tmp = self.keywords[0]
-                    self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
-                    results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
-                    if self.keywords_results_count and appear_times_tmp < 3:
-                        for key in self.keywords:
-                            if self.keywords_results_count_dict[key] > results_count_tmp:
-                                results_count_tmp = self.keywords_results_count_dict[key]
-                                keyword_tmp = key
-
-        if self.is_no_question(): # 如果是否定问题
-            if max(list(self.keyword_in_results.values()))> 0:
-                keyword_tmp = self.keywords[0]
-                for key in self.keyword_in_results:
-                    if self.keyword_in_results[key] < appear_times_tmp:
-                        keyword_tmp = key
-                        appear_times_tmp = self.keyword_in_results[key]
-
-            if self.keywords_results_count:
-                self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
-                results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
-                if key in self.keywords:
-                    if self.keyword_in_results[key] == appear_times_tmp:
-                        if self.keywords_results_count_dict[key] < results_count_tmp:
-                            results_count_tmp = self.keywords_results_count_dict[key]
-                            keyword_tmp = key
-                    results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
-
-        return keyword_tmp
+    # def get_tuijian(self):
+    #     appear_times_tmp = 0
+    #     keyword_tmp = ''
+    #     if not self.is_no:
+    #         if max(list(self.keyword_in_results.values()))> 0:
+    #             keyword_tmp = self.keywords[0]
+    #             appear_times_tmp = self.keyword_in_results[keyword_tmp]
+    #             if self.keyword_in_results:
+    #                 for key in self.keywords:
+    #                     if self.keyword_in_results[key] > appear_times_tmp:
+    #                         keyword_tmp = key
+    #                         appear_times_tmp = self.keyword_in_results[key]
+    #             if self.keywords_results_count:
+    #                 self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
+    #                 results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+    #                 for key in self.keywords:
+    #                     if self.keywords_results_count_dict[key] > results_count_tmp*3:
+    #                         results_count_tmp = self.keywords_results_count_dict[key]
+    #                         keyword_tmp = key
+    #         else:
+    #             if self.keywords_results_count:
+    #                 self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
+    #                 results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+    #                 for key in self.keywords:
+    #                     if self.keywords_results_count_dict[key] > results_count_tmp:
+    #                         results_count_tmp = self.keywords_results_count_dict[key]
+    #                         keyword_tmp = key
+    #
+    #     if self.is_no: # 如果是否定问题
+    #         if max(list(self.keyword_in_results.values()))> 0:
+    #             keyword_tmp = self.keywords[0]
+    #             for key in self.keyword_in_results:
+    #                 if self.keyword_in_results[key] < appear_times_tmp:
+    #                     keyword_tmp = key
+    #                     appear_times_tmp = self.keyword_in_results[key]
+    #
+    #         if self.keywords_results_count:
+    #             self.keywords_results_count_dict =  {list(result.keys())[0]:list(result.values())[0] for result in self.keywords_results_count}
+    #             results_count_tmp = self.keywords_results_count_dict[keyword_tmp]
+    #             appear_times_tmp = self.keyword_in_results[keyword_tmp]
+    #             if key in self.keywords:
+    #                 if self.keyword_in_results[key] == 0:
+    #                     if self.keywords_results_count_dict[key] < results_count_tmp:
+    #                         results_count_tmp = self.keywords_results_count_dict[key]
+    #                         keyword_tmp = key
+    #     return keyword_tmp
 
     def read_result(self):
         results_string = []
@@ -192,6 +192,10 @@ class Result(object):
         .replace(')','').replace('》',"").replace('（','').replace(')','')\
         .replace(',',' ').replace('，','')\
         .replace('<',' ').replace('>',' ')
+        for zhuci in self.zhuci_set:
+            if zhuci in string:
+                string = string.replace(zhuci,'+')
+        string = string.replace('++','+')
         return string
 
     def clear_str_keyword(self,string):
@@ -212,15 +216,15 @@ class Result(object):
             row_number = rets.__len__()
             content = list(ret['word'] for ret in rets)
             if row_number>3:
-                question = ''.join(content[:(row_number-3)])
-                keywords = content[(row_number-3):]
+                self.question = ''.join(content[:(row_number-3)])
+                self.keywords = content[(row_number-3):]
             else:
-                question = content[0]
-                keywords = content[1:]
-            question = self.clear_str_question(question)
-
-            keywords = list(map(self.clear_str_keyword,keywords))
-            return question,keywords
+                self.question = content[0]
+                self.keywords = content[1:]
+            # self.is_no = self.is_no_question()
+            self.question = self.clear_str_question(self.question)
+            self.keywords = list(map(self.clear_str_keyword,self.keywords))
+            return self.question,self.keywords
         except BaseException as e:
             print(e)
             return None,None
