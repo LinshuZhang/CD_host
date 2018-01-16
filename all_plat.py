@@ -7,6 +7,7 @@ import json
 from multiprocessing.dummy import Pool as ThreadPool
 
 def get_sougou(key):
+    key = 'cddh'
     url = 'http://fex.sa.sogou.com/api/ans?'
     headers = {'Host': 'wd.sa.sogou.com',
            'Connection': 'keep-alive',
@@ -21,17 +22,25 @@ def get_sougou(key):
     cookies =  dict(dt_ssuid=random_number_str,IPLOC='CN3502')
     web_content = requests.get(url,params=payload,headers=headers,cookies=cookies,timeout = 0.5)
     web_content_json = web_content.json()
+    choice = json.loads(web_content_json['result'][1])['answers']
     result = json.loads(web_content_json['result'][1])['result']
-    summary = json.loads(web_content_json['result'][1])['search_infos'][0]['summary']
-    return result,summary
+    summary = json.loads(web_content_json['result'][1])['search_infos'][0]['summary']    
+    right_number = 3
+    if result in choice:
+        right_number = choice.index(result)
+    return result,summary,right_number
 
 def record_result(key):
-    result,summary = get_sougou(key)
+    result,summary,right_number = get_sougou(key)
     result_str = []
     result_str.append('结果 ：')
+    if result.__len__()>2:
+        if result[:2] == '汪仔':
+            result = '大概没辙了'
     result_str.append(result)
     result_str.append('\n\n说明 : ')
     result_str.append(summary)
+    result_str.append(right_number)
     with open('{}.html'.format(key),'w') as f:
         f.write(''.join(result_str))
 
