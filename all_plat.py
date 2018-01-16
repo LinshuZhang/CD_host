@@ -7,7 +7,6 @@ import json
 from multiprocessing.dummy import Pool as ThreadPool
 
 def get_sougou(key):
-    key = 'cddh'
     url = 'http://fex.sa.sogou.com/api/ans?'
     headers = {'Host': 'wd.sa.sogou.com',
            'Connection': 'keep-alive',
