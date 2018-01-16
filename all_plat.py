@@ -53,28 +53,28 @@ def main():
         if (time.time() - record_time)>3:
             record_time = time.time()
             with open('time.html','w') as f:
-                f.write('当前时间戳为{}'.format(time.time()))
-                print('当前时间戳为{}'.format(time.time()))
+                f.write(u'当前时间戳为{}'.format(time.time()))
+                print(u'当前时间戳为{}'.format(time.time()))
     except BaseException as e:
-        print("记录失败，错误：{}".format(e))
+        print(u"记录失败，错误：{}".format(e))
         print(e)
 
 record_time = time.time()
 if __name__ == "__main__":
     connect_way = ['xigua','huajiao','cddh','zscr']
     update_times = 1
-    print("开始记录")
+    print(u"开始记录")
     while True:
         start_time = time.time()
         try:
             main()
         except BaseException as e:
-            print("记录失败，错误：{}".format(e))
+            print(u"记录失败，错误：{}".format(e))
         end_time = time.time()
         if end_time-start_time < 0.1:
             time.sleep(0.15-(end_time-start_time))
-            print("更新停顿")
+            print(u"更新停顿")
         update_times += 1
-        print("已经更新了{}次".format(update_times))
+        print(u"已经更新了{}次".format(update_times))
 
-    print("记录完毕")
+    print(u"记录完毕")
