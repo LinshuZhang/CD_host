@@ -40,7 +40,7 @@ def record_result(key):
     result_str.append(result)
     result_str.append('\n\n说明 : ')
     result_str.append(summary)
-    result_str.append(right_number)
+    result_str.append(str(right_number))
     with open('{}.html'.format(key),'w') as f:
         f.write(''.join(result_str))
 
