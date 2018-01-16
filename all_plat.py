@@ -69,7 +69,7 @@ if __name__ == "__main__":
         try:
             main()
         except BaseException as e:
-            print("Record Fail：{}".format(e))
+            print("Record Fail:{}".format(e))
         end_time = time.time()
         if end_time-start_time < 0.1:
             time.sleep(0.15-(end_time-start_time))
