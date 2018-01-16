@@ -34,8 +34,8 @@ def record_result(key):
     result_str = []
     result_str.append('结果 ：')
     if result.__len__()>2:
-        if result[:2] == '汪仔':
-            result = '大概没辙了'
+        if '汪仔' in result:
+            result = '大概没辙了...'
     result_str.append(result)
     result_str.append('\n\n说明 : ')
     result_str.append(summary)
