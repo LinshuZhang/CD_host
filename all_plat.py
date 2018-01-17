@@ -5,6 +5,7 @@ from urllib import request
 import random
 import json
 from multiprocessing.dummy import Pool as ThreadPool
+import re
 
 def get_sougou(key):
     url = 'http://140.143.49.31/api/ans2'
