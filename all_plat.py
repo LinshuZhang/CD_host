@@ -7,26 +7,30 @@ import json
 from multiprocessing.dummy import Pool as ThreadPool
 
 def get_sougou(key):
-    url = 'http://fex.sa.sogou.com/api/ans?'
-    headers = {'Host': 'wd.sa.sogou.com',
+    url = 'http://140.143.49.31/api/ans2'
+    headers = {'Host': '140.143.49.31',
            'Connection': 'keep-alive',
            'Accept': 'application/json',
            "X-Requested-With": "XMLHttpRequest'User-Agent':'DYZB/2.271 (iPhone; iOS 9.3.2; Scale/3.00)'",
            "User-Agent": "Mozilla/5.0 (Linux; Android 5.0; Samsung Galaxy S6 - 5.0.0 - API 21 - 1440x2560 Build/LRX21M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile Safari/537.36 SogouSearch Android1.0 version3.0 AppVersion/5903",
-           "Referer": "http://wd.sa.sogou.com/",
+           "Referer": "http://nb.sa.sogou.com/",
            "Accept-Encoding": "gzip,deflate",
-           "Accept-Language": "zh-CN,en-US;q=0.8"}
-    payload = {'key': key, '_': int(time.time()*1000)}
-    random_number_str = ''.join([str(random.randint(0,9)) for i in  range(10)])
-    cookies =  dict(dt_ssuid=random_number_str,IPLOC='CN3502')
-    web_content = requests.get(url,params=payload,headers=headers,cookies=cookies,timeout = 0.5)
-    web_content_json = web_content.json()
-    choice = json.loads(web_content_json['result'][1])['answers']
-    result = json.loads(web_content_json['result'][1])['result']
-    summary = json.loads(web_content_json['result'][1])['search_infos'][0]['summary']    
+           "Accept-Language": "zh-CN,en-US;q=0.8",
+            "X-Requested-With": "com.sogou.activity.src"}
+    random_number_str = ''.join([str(random.randint(0,9)) for i in  range(17)])
+    jQuery_word = 'jQuery3210{}'.format(random_number_str)
+    payload = {'key': key, 'wdcallback': jQuery_word,'_': int(time.time()*1000)}
+    web_content = requests.get(url,params=payload,headers=headers)
+    web_content_json = web_content.text.replace(jQuery_word,'').replace('\\','')
+    choice = re.findall('"answers":\[(.+?)\]',web_content_json)[-1].replace("\"",'').split(',')
+    result = re.findall('recommend":"(.+?)","result"',web_content_json)[-1]
+    summary = re.findall('summary":"(.+?)","title"',web_content_json)[-1]
     right_number = 3
-    if result in choice:
-        right_number = choice.index(result)
+    print(choice)
+    for i in range(3):
+        if result in choice[i]:
+            right_number = i
+            print("Get choice :{}".format(right_number))
     return result,summary,right_number
 
 def record_result(key):
