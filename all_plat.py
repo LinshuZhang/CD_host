@@ -24,13 +24,13 @@ def get_sougou(key):
     web_content = requests.get(url,params=payload,headers=headers)
     web_content_json = web_content.text.replace(jQuery_word,'').replace('\\','')
     choice = re.findall('"answers":\[(.+?)\]',web_content_json)[-1].replace("\"",'').split(',')
-    result = re.findall('recommend":"(.+?)","result"',web_content_json)[-1]
+    result = re.findall('result":"(.+?)","search_infos"',web_content_json)[-1]
     summary = re.findall('summary":"(.+?)","title"',web_content_json)[-1]
     right_number = 3
     for i in range(3):
         if result in choice[i]:
             right_number = i
-            print("Get choice :{}".format(right_number))
+            # print("Get choice :{}".format(right_number))
     return result,summary,right_number
 
 def record_result(key):
