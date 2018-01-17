@@ -27,7 +27,6 @@ def get_sougou(key):
     result = re.findall('recommend":"(.+?)","result"',web_content_json)[-1]
     summary = re.findall('summary":"(.+?)","title"',web_content_json)[-1]
     right_number = 3
-    print(choice)
     for i in range(3):
         if result in choice[i]:
             right_number = i
