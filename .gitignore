@@ -11,7 +11,7 @@ results.html
 Icon
 *.db
 *.png
-
+*.html
 # Thumbnails
 ._*
 

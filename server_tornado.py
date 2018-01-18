@@ -15,9 +15,38 @@ class MainHandler(tornado.web.RequestHandler):
             self.write(f.read())
         #application.count += 1
         #print(application.count)
+class XiguaHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('xigua.html','r') as f:
+            self.write(f.read())
+
+class HuajiaoHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('huajiao.html','r') as f:
+            self.write(f.read())
+
+class CddhHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('cddh.html','r') as f:
+            self.write(f.read())
+
+class ZscrHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('zscr.html','r') as f:
+            self.write(f.read())
+
+class TimeHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('time.html','r') as f:
+            self.write(f.read())
 
 application = tornado.web.Application([
     (r"/", MainHandler),
+    (r"/xigua", XiguaHandler),
+    (r"/huajiao", HuajiaoHandler),
+    (r"/cddh", CddhHandler),
+    (r"/zscr", ZscrHandler),
+    (r"/time", TimeHandler),
 ])
 if __name__ == "__main__":
     #application.count = 0
