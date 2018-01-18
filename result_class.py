@@ -32,8 +32,9 @@ class Result(object):
         self.image_path = image_path
         self.image_base64 = self.get_image_base64()
         self.is_no = 0
-        self.zhuci_set = ['下列','选项','哪个','哪一','那一','那个','什么','是指','是','的','在','从',\
-        '中有','即','主要','次要','和','有关','无关','与','其中']
+        self.zhuci_set = ['下列','选项','哪个','哪一','哪位','那一','那个','什么','是指','是','的','在','从',\
+        '中有','即','主要','次要','和','有关','无关','与','其中','句话','一般','由于','中'\
+        '哪项',]
         self.tuijian = ''
         self.no_word_set = ['除外','不是','并非','没有']
         self.keywords_results_count = None
@@ -190,7 +191,7 @@ class Result(object):
             string = string[1:]
         string = string.replace('(','').replace('《','')\
         .replace(')','').replace('》',"").replace('（','').replace(')','')\
-        .replace(',',' ').replace('，','')\
+        .replace(',',' ').replace('，','').replace('?','')\
         .replace('<',' ').replace('>',' ')
         for zhuci in self.zhuci_set:
             if zhuci in string:
@@ -206,7 +207,7 @@ class Result(object):
         string = string.replace('(','').replace('《','')\
         .replace(')','').replace('》',"").replace('（','').replace(')','')\
         .replace(',',' ').replace('，','')\
-        .replace('<',' ').replace('>',' ')
+        .replace('<',' ').replace('>',' ').replace(':','')
         return string
 
     def analysis_image(self):
