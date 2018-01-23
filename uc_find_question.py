@@ -49,7 +49,8 @@ if __name__ == '__main__':
         time.sleep(0.1)
         if is_white(53,225) and is_white(368,236):
             if is_white(255,154):
-                print("发现题目,获取提示中:{}".format(time.time()))
+                question_time += 1
+                print("发现题目{},获取提示中:{}".format(question_time,time.time()))
                 question_img = pag.screenshot(region=(40,167,330,340))
                 question_img.save(image_path)
                 send.send_file(image_path)

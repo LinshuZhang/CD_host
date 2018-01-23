@@ -79,6 +79,6 @@ if __name__ == "__main__":
             time.sleep(0.15-(end_time-start_time))
             print("Update Stop")
         update_times += 1
-        print("Update Times {}".format(update_times))
+        #print("Update Times {}".format(update_times))
 
     print("Record finished")
