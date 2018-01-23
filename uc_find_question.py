@@ -42,18 +42,19 @@ def is_white(x,y):
     return True
 
 if __name__ == '__main__':
-    white_times = 0
     get_pixel_color_init()
+    question_time = 0
     print("开始等待题目")
     while True:
         time.sleep(0.1)
         if is_white(53,225) and is_white(368,236):
-            if is_white(188,207):
+            if is_white(255,154):
                 print("发现题目,获取提示中:{}".format(time.time()))
-                white_times += 1
-                question_img = pag.screenshot(region=(47,243,330,340))
+                question_img = pag.screenshot(region=(40,167,330,340))
                 question_img.save(image_path)
                 send.send_file(image_path)
+                if question_time > 12:
+                    break
                 print("图片发送完毕: {}".format(time.time()))
                 print(" 开始15秒的等待时间")
                 for i in range(10):
@@ -61,8 +62,4 @@ if __name__ == '__main__':
                     time.sleep(1)
             else:
                 print("答案公布时间")
-                white_times += 1
-                print(" 开始13秒的等待时间")
-                for i in range(2):
-                    print(i)
-                    time.sleep(1)
+                time.sleep(0.3)

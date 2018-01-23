@@ -187,7 +187,7 @@ class Result(object):
     def clear_str_question(self,string):
         if string[0] in list(str(i) for i in range(10)):
             string = string[1:]
-        if string[0] == '.'
+        if string[0] == '.':
             string = string[1:]
         string = string.replace('(','').replace('《','')\
         .replace(')','').replace('》',"").replace('（','').replace(')','')\
@@ -202,7 +202,7 @@ class Result(object):
     def clear_str_keyword(self,string):
         if string[0] in 'ABC':
             string = string[1:]
-        if string[0] == '.'
+        if string[0] == '.':
             string = string[1:]
         string = string.replace('(','').replace('《','')\
         .replace(')','').replace('》',"").replace('（','').replace(')','')\
