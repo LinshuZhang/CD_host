@@ -77,7 +77,7 @@ if __name__ == "__main__":
         end_time = time.time()
         if end_time-start_time < 0.1:
             time.sleep(0.15-(end_time-start_time))
-            print("Update Stop")
+            #print("Update Stop")
         update_times += 1
         #print("Update Times {}".format(update_times))
 

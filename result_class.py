@@ -195,8 +195,8 @@ class Result(object):
         .replace('<',' ').replace('>',' ')
         for zhuci in self.zhuci_set:
             if zhuci in string:
-                string = string.replace(zhuci,'+')
-        string = string.replace('++','+')
+                string = string.replace(zhuci,' ')
+        string = string.replace('  ',' ')
         return string
 
     def clear_str_keyword(self,string):
