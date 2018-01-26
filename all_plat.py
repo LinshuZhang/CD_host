@@ -65,7 +65,7 @@ def main():
 
 record_time = time.time()
 if __name__ == "__main__":
-    connect_way = ['xigua','huajiao','cddh','zscr']
+    connect_way = ['xigua','huajiao','cddh','zscr','hjsm']
     update_times = 1
     print("Strat record")
     while True:

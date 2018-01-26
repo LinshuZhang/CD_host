@@ -35,6 +35,11 @@ class ZscrHandler(tornado.web.RequestHandler):
         with open('zscr.html','r') as f:
             self.write(f.read())
 
+class HjsmHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('hjsm.html','r') as f:
+            self.write(f.read())
+
 class TimeHandler(tornado.web.RequestHandler):
     def get(self):
         with open('time.html','r') as f:
@@ -46,6 +51,7 @@ application = tornado.web.Application([
     (r"/huajiao", HuajiaoHandler),
     (r"/cddh", CddhHandler),
     (r"/zscr", ZscrHandler),
+    (r"/hjsm", HjsmHandler),
     (r"/time", TimeHandler),
 ])
 if __name__ == "__main__":
