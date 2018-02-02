@@ -45,6 +45,41 @@ class TimeHandler(tornado.web.RequestHandler):
         with open('time.html','r') as f:
             self.write(f.read())
 
+class Dan_HaokanHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/haokan.html','r') as f:
+            self.write(f.read())
+
+class Dan_TiebaHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/tieba.html','r') as f:
+            self.write(f.read())
+
+class Dan_XiguashipinHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/xiguashipin.html','r') as f:
+            self.write(f.read())
+
+class Dan_HuajiaoHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/huajiao.html','r') as f:
+            self.write(f.read())
+
+class Dan_ChongdingdahuiHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/chongdingdahui.html','r') as f:
+            self.write(f.read())
+
+class Dan_ZhishichaorenHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/zhishichaoren.html','r') as f:
+            self.write(f.read())
+
+class Dan_YoukuHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/youku.html','r') as f:
+            self.write(f.read())
+
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/xigua", XiguaHandler),
@@ -53,6 +88,13 @@ application = tornado.web.Application([
     (r"/zscr", ZscrHandler),
     (r"/hjsm", HjsmHandler),
     (r"/time", TimeHandler),
+    (r"/dange/haokan", Dan_HaokanHandler),
+    (r"/dange/tieba", Dan_TiebaHandler),
+    (r"/dange/xiguashipin", Dan_XiguashipinHandler),
+    (r"/dange/huajiao", Dan_HuajiaoHandler),
+    (r"/dange/chongdingdahui", Dan_ChongdingdahuiHandler),
+    (r"/dange/zhishichaoren", Dan_ZhishichaorenHandler),
+    (r"/dange/youku", Dan_YoukuHandler)
 ])
 if __name__ == "__main__":
     #application.count = 0
