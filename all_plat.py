@@ -1,4 +1,4 @@
-# -*-coding = utf-8 -*-
+# -*-coding=utf-8-*-
 import requests
 import time
 from urllib import request
@@ -23,29 +23,37 @@ def get_sougou(key):
     payload = {'key': key, 'wdcallback': jQuery_word,'_': int(time.time()*1000)}
     web_content = requests.get(url,params=payload,headers=headers)
     web_content_json = web_content.text.replace(jQuery_word,'').replace('\\','')
-    choice = re.findall('"answers":\[(.+?)\]',web_content_json)[-1].replace("\"",'').split(',')
-    result = re.findall('result":"(.+?)","search_infos"',web_content_json)[-1]
-    summary = re.findall('summary":"(.*?)","title"',web_content_json)[-1]
     right_number = 3
-    for i in range(3):
-        if result in choice[i]:
-            right_number = i
-            # print("Get choice :{}".format(right_number))
+    if re.findall('"answers":\[(.+?)\]',web_content_json):
+        choice = re.findall('"answers":\[(.+?)\]',web_content_json)[-1].replace("\"",'').split(',')
+        result = re.findall('result":"(.+?)","search_infos"',web_content_json)[-1]
+        summary = re.findall('summary":"(.*?)","title"',web_content_json)[-1]
+        for i in range(3):
+            if result in choice[i]:
+                right_number = i
+                # print("Get choice :{}".format(right_number))
+    else:
+        #print('{}的错误为:{}'.format(key,web_content_json))
+        choice = ''
+        result = ''
+        summary = ''
+
     return result,summary,right_number
 
 def record_result(key):
     result,summary,right_number = get_sougou(key)
-    result_str = []
-    result_str.append('结果 ：')
-    if result.__len__()>2:
-        if '汪仔' in result:
-            result = '大概没辙了...'
-    result_str.append(result)
-    result_str.append('\n\n说明 : ')
-    result_str.append(summary)
-    result_str.append(str(right_number))
-    with open('{}.html'.format(key),'w') as f:
-        f.write(''.join(result_str))
+    if result:
+        result_str = []
+        result_str.append('结果 ：')
+        if result.__len__()>2:
+            if '汪仔' in result:
+                result = '大概没辙了...'
+        result_str.append(result)
+        result_str.append('\n\n说明 : ')
+        result_str.append(summary)
+        result_str.append(str(right_number))
+        with open('{}.html'.format(key),'w') as f:
+            f.write(''.join(result_str))
 
 def main():
     global record_time
@@ -61,7 +69,6 @@ def main():
                 print('Now:{}'.format(time.time()))
     except BaseException as e:
         print("Record Fail：{}".format(e))
-        print(e)
 
 record_time = time.time()
 if __name__ == "__main__":
@@ -75,8 +82,8 @@ if __name__ == "__main__":
         except BaseException as e:
             print("Record Fail:{}".format(e))
         end_time = time.time()
-        if end_time-start_time < 0.1:
-            time.sleep(0.15-(end_time-start_time))
+        if end_time-start_time < 0.15:
+            time.sleep(0.2-(end_time-start_time))
             #print("Update Stop")
         update_times += 1
         #print("Update Times {}".format(update_times))
