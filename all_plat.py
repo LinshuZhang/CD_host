@@ -25,23 +25,24 @@ def get_sougou(key):
     web_content_json = web_content.text.replace(jQuery_word,'').replace('\\','')
     right_number = 3
     if re.findall('"answers":\[(.+?)\]',web_content_json):
-        choice = re.findall('"answers":\[(.+?)\]',web_content_json)[-1].replace("\"",'').split(',')
-        result = re.findall('result":"(.+?)","search_infos"',web_content_json)[-1]
-        summary = re.findall('summary":"(.*?)","title"',web_content_json)[-1]
-        for i in range(3):
-            if result in choice[i]:
-                right_number = i
-                # print("Get choice :{}".format(right_number))
+        choice = ''
+        try:
+            result = re.findall('result":"(.+?)","search_infos"',web_content_json)[-1]
+        except:
+            result = re.findall('result":"(.+?)"',web_content_json)[-1]
+        try:
+            summary = re.findall('summary":"(.*?)","title"',web_content_json)[-1]
+        except:
+            summary = ''
     else:
-        #print('{}的错误为:{}'.format(key,web_content_json))
         choice = ''
         result = ''
         summary = ''
 
-    return result,summary,right_number
+    return result,summary
 
 def record_result(key):
-    result,summary,right_number = get_sougou(key)
+    result,summary= get_sougou(key)
     if result:
         result_str = []
         result_str.append('结果 ：')
@@ -51,14 +52,13 @@ def record_result(key):
         result_str.append(result)
         result_str.append('\n\n说明 : ')
         result_str.append(summary)
-        result_str.append(str(right_number))
         with open('{}.html'.format(key),'w') as f:
             f.write(''.join(result_str))
 
 def main():
     global record_time
     try:
-        pool = ThreadPool()#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
+        pool = ThreadPool(5)#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
         results = pool.map(record_result,connect_way)
         pool.close()
         pool.join()
@@ -82,8 +82,8 @@ if __name__ == "__main__":
         except BaseException as e:
             print("Record Fail:{}".format(e))
         end_time = time.time()
-        if end_time-start_time < 0.15:
-            time.sleep(0.2-(end_time-start_time))
+        if end_time-start_time < 0.18:
+            time.sleep(0.23-(end_time-start_time))
             #print("Update Stop")
         update_times += 1
         #print("Update Times {}".format(update_times))
