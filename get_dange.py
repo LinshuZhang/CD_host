@@ -16,6 +16,21 @@ def changeBase(n,b):
     else:
         return baseList[y]
 
+def get_dange(key):
+    first_time = 0
+    ws = create_connection("wss://selab.baidu.com/nv/answer.sock/?EIO=3&transport=websocket")
+    ws.recv()
+    ws.recv()
+    ws.send(b'21')
+    ws.recv()
+    ws.send('40/nv/{}/answer'.format(key).encode())
+    ws.recv()
+    ws.send('42/nv/{}/answer'.format(key).encode())
+    result =  ws.recv()
+
+    ws.send(b'2')
+    result =  ws.recv()
+
     while True:
         ws.send(b'2')
         result =  ws.recv()
