@@ -1,3 +1,4 @@
+# -*-coding=utf-8-*-
 import tornado.ioloop
 import tornado.web
 from config import server_http_port
@@ -80,6 +81,10 @@ class Dan_YoukuHandler(tornado.web.RequestHandler):
         with open('./dange/youku.html','r') as f:
             self.write(f.read())
 
+class NotipHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write('此边屏幕尚未加入提示')
+
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/xigua", XiguaHandler),
@@ -94,7 +99,8 @@ application = tornado.web.Application([
     (r"/dange/huajiao", Dan_HuajiaoHandler),
     (r"/dange/chongdingdahui", Dan_ChongdingdahuiHandler),
     (r"/dange/zhishichaoren", Dan_ZhishichaorenHandler),
-    (r"/dange/youku", Dan_YoukuHandler)
+    (r"/dange/youku", Dan_YoukuHandler),
+    (r"/notip", NotipHandler)
 ])
 if __name__ == "__main__":
     #application.count = 0
