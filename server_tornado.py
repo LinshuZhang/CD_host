@@ -21,6 +21,11 @@ class XiguaHandler(tornado.web.RequestHandler):
         with open('xigua.html','r') as f:
             self.write(f.read())
 
+class XiguaUCHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('xigua_UC.html','r') as f:
+            self.write(f.read())
+            
 class HuajiaoHandler(tornado.web.RequestHandler):
     def get(self):
         with open('huajiao.html','r') as f:
@@ -88,6 +93,7 @@ class NotipHandler(tornado.web.RequestHandler):
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/xigua", XiguaHandler),
+    (r"/xigua_UC", XiguaUCHandler),
     (r"/huajiao", HuajiaoHandler),
     (r"/cddh", CddhHandler),
     (r"/zscr", ZscrHandler),
