@@ -24,7 +24,7 @@ def get_sougou(key):
     web_content = requests.get(url,params=payload,headers=headers)
     web_content_json = web_content.text.replace(jQuery_word,'').replace('\\','')
     right_number = 3
-    if re.findall('"answers":\[(.+?)\]',web_content_json):
+    if 'result' in web_content_json:
         choice = ''
         try:
             result = re.findall('result":"(.+?)","search_infos"',web_content_json)[-1]
