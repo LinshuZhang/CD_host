@@ -38,8 +38,10 @@ def get_dange(key):
             first_time += 1
             if first_time%20==0:
                 print("{} Connect Succeed".format(key))
-        if result != '3':
+        elif result[:1] == '4':
             print(read_result(result,key))
+        else:
+            print("{} Connect Failed".format(key))
         time.sleep(0.2)
 
 def read_result(result,key):
@@ -54,7 +56,7 @@ def read_result(result,key):
     result_str = ''.join(string_list)
     with open('./dange/{}.html'.format(key),'w') as f:
         f.write(''.join(result_str))
-    return string
+    return result_str
 
 def main():
     pool = ThreadPool(7)#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
