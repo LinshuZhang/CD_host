@@ -16,33 +16,42 @@ def changeBase(n,b):
     else:
         return baseList[y]
 
+def to_connect(key):
+    global ws
+    ws[key] = create_connection("wss://selab.baidu.com/nv/answer.sock/?EIO=3&transport=websocket")
+    ws[key].recv()
+    ws[key].recv()
+    ws[key].send(b'21')
+    ws[key].recv()
+    ws[key].send('40/nv/{}/answer'.format(key).encode())
+    ws[key].recv()
+    ws[key].send('42/nv/{}/answer'.format(key).encode())
+    result =  ws[key].recv()
+
+    ws[key].send(b'2')
+    result =  ws[key].recv()
+    if result[:1] == '3':
+        print("{} Connect Succeed".format(key))
+
 def get_dange(key):
     first_time = 0
-    ws = create_connection("wss://selab.baidu.com/nv/answer.sock/?EIO=3&transport=websocket")
-    ws.recv()
-    ws.recv()
-    ws.send(b'21')
-    ws.recv()
-    ws.send('40/nv/{}/answer'.format(key).encode())
-    ws.recv()
-    ws.send('42/nv/{}/answer'.format(key).encode())
-    result =  ws.recv()
-
-    ws.send(b'2')
-    result =  ws.recv()
-
+    to_connect(key)
     while True:
-        ws.send(b'2')
-        result =  ws.recv()
-        if result[:1] == '3':
-            first_time += 1
-            if first_time%20==0:
-                print("{} Connect Succeed".format(key))
-        elif result[:1] == '4':
-            print(read_result(result,key))
-        else:
-            print("{} Connect Failed".format(key))
-        time.sleep(0.2)
+        try:
+            ws[key].send(b'2')
+            result =  ws[key].recv()
+            if result[:1] == '3':
+                first_time += 1
+                if first_time%20==0:
+                    print("{} Connect Succeed".format(key))
+            elif result[:1] == '4':
+                print(read_result(result,key))
+            else:
+                print("{} Connect Failed".format(key))
+            time.sleep(0.2)
+        except:
+            print("{} Connect Failed,try to reconnect".format(key))
+            to_connect(key)
 
 def read_result(result,key):
     tip = ''.join(re.findall('"tips":\"(.+?)\"',result))
@@ -72,4 +81,5 @@ def main():
 
 if __name__ == "__main__":
     connect_way = ['haokan','tieba','xiguashipin','huajiao','chongdingdahui','zhishichaoren','youku']
+    ws = {}
     main()
