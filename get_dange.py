@@ -30,6 +30,8 @@ def to_connect(key):
 
     ws[key].send(b'2')
     result =  ws[key].recv()
+    ws[key].send(b'2')
+    result =  ws[key].recv()
     if result[:1] == '3':
         print("{} Connect Succeed".format(key))
 
@@ -40,11 +42,13 @@ def get_dange(key):
         try:
             ws[key].send(b'2')
             result =  ws[key].recv()
+            result =  ws[key].recv()
             if result[:1] == '3':
                 first_time += 1
                 if first_time%20==0:
                     print("{} Connect Succeed".format(key))
             elif result[:1] == '4':
+                print(time.time())
                 print(read_result(result,key))
             else:
                 print("{} Connect Failed".format(key))
