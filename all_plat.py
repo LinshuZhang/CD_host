@@ -61,7 +61,7 @@ def record_result(key):
 def main():
     global record_time
     try:
-        pool = ThreadPool(6)#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
+        pool = ThreadPool(6)
         results = pool.map(record_result,connect_way)
         pool.close()
         pool.join()
@@ -70,8 +70,8 @@ def main():
             with open('time.html','w') as f:
                 f.write(u'当前时间戳为{}'.format(time.time()))
                 print('Now:{}'.format(time.time()))
-    except BaseException as e:
-        print("Record Fail：{}".format(e))
+    except:
+        print("Record Fail")
 
 record_time = time.time()
 if __name__ == "__main__":
@@ -82,8 +82,8 @@ if __name__ == "__main__":
         start_time = time.time()
         try:
             main()
-        except BaseException as e:
-            print("Record Fail:{}".format(e))
+        except:
+            print("Record Fail")
         end_time = time.time()
         if end_time-start_time < 0.18:
             time.sleep(0.23-(end_time-start_time))
