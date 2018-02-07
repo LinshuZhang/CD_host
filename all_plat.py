@@ -6,23 +6,26 @@ import random
 import json
 from multiprocessing.dummy import Pool as ThreadPool
 import re
+import base64
 
 def get_sougou(key):
-    url = 'http://140.143.49.31/api/ans2'
-    headers = {'Host': '140.143.49.31',
+    url = 'https://wdpush.sogoucdn.com/api/anspush'
+    headers = {'Host': 'wdpush.sogoucdn.com',
            'Connection': 'keep-alive',
-           'Accept': 'application/json',
-           "X-Requested-With": "XMLHttpRequest'User-Agent':'DYZB/2.271 (iPhone; iOS 9.3.2; Scale/3.00)'",
+           'Accept': '*/*',
            "User-Agent": "Mozilla/5.0 (Linux; Android 5.0; Samsung Galaxy S6 - 5.0.0 - API 21 - 1440x2560 Build/LRX21M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile Safari/537.36 SogouSearch Android1.0 version3.0 AppVersion/5903",
-           "Referer": "http://nb.sa.sogou.com/",
+           "Referer": "https://assistant.sogoucdn.com/v5/cheat-sheet?channel=cddh",
            "Accept-Encoding": "gzip,deflate",
            "Accept-Language": "zh-CN,en-US;q=0.8",
             "X-Requested-With": "com.sogou.activity.src"}
-    random_number_str = ''.join([str(random.randint(0,9)) for i in  range(17)])
-    jQuery_word = 'jQuery3210{}'.format(random_number_str)
+    cookie = {'APP-SGS-ID':'13661516023176817%7C701697'}
+    random_number_str = ''.join([str(random.randint(0,9)) for i in  range(16)])+'_{}'.format(int(time.time()*1000))
+    jQuery_word = 'jQuery2000{}'.format(random_number_str)
     payload = {'key': key, 'wdcallback': jQuery_word,'_': int(time.time()*1000)}
-    web_content = requests.get(url,params=payload,headers=headers)
+    web_content = requests.get(url,params=payload,headers=headers,cookies=cookie)
     web_content_json = web_content.text.replace(jQuery_word,'').replace('\\','')
+    result_base64 = re.findall('"result": "(.+?)"',web_content_json)[0]
+    web_content_json = str(json.loads(base64.b64decode(result_base64)))
     right_number = 3
     if web_content_json.__len__() > 30:
         choice = ''
@@ -58,7 +61,7 @@ def record_result(key):
 def main():
     global record_time
     try:
-        pool = ThreadPool(5)#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
+        pool = ThreadPool(6)#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
         results = pool.map(record_result,connect_way)
         pool.close()
         pool.join()
