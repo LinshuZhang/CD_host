@@ -71,7 +71,9 @@ def read_result(result,key):
     if not ('欢迎' in result_to_write):
         with open('./dange/{}.html'.format(key),'w') as f:
             f.write(result_to_write)
-    return result_str
+        return result_str
+    else:
+        return '已过滤'
 
 def main():
     pool = ThreadPool(7)#机器是多少核便填多少，卤煮实在ubuntu14.04 4核戴尔电脑上跑的程序
