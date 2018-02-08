@@ -67,8 +67,10 @@ def read_result(result,key):
     for i in range(3):
         string_list.append('{} : {}\n'.format(choice[i+1],prop[i]))
     result_str = ''.join(string_list)
-    with open('./dange/{}.html'.format(key),'w') as f:
-        f.write(''.join(result_str))
+    result_to_write = ''.join(result_str)
+    if not ('欢迎' in result_to_write):
+        with open('./dange/{}.html'.format(key),'w') as f:
+            f.write(result_to_write)
     return result_str
 
 def main():
