@@ -61,7 +61,7 @@ def record_result(key):
 def main():
     global record_time
     try:
-        pool = ThreadPool(6)
+        pool = ThreadPool(7)
         results = pool.map(record_result,connect_way)
         pool.close()
         pool.join()
@@ -75,7 +75,7 @@ def main():
 
 record_time = time.time()
 if __name__ == "__main__":
-    connect_way = ['xigua','huajiao','cddh','zscr','hjsm']
+    connect_way = ['xigua','huajiao','cddh','zscr','hjsm','tb','qf']
     update_times = 1
     print("Strat record")
     while True:
@@ -85,8 +85,8 @@ if __name__ == "__main__":
         except:
             print("Record Fail")
         end_time = time.time()
-        if end_time-start_time < 0.18:
-            time.sleep(0.23-(end_time-start_time))
+        if end_time-start_time < 0.25:
+            time.sleep(0.25-(end_time-start_time))
             #print("Update Stop")
         update_times += 1
         #print("Update Times {}".format(update_times))
