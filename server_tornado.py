@@ -51,6 +51,11 @@ class QfHandler(tornado.web.RequestHandler): #zhishiyingxiong
         with open('qf.html','r') as f:
             self.write(f.read())
 
+class YkHandler(tornado.web.RequestHandler): #zhishiyingxiong
+    def get(self):
+        with open('yk.html','r') as f:
+            self.write(f.read())
+
 class TbHandler(tornado.web.RequestHandler): #diantichengjin
     def get(self):
         with open('tb.html','r') as f:
@@ -110,6 +115,7 @@ application = tornado.web.Application([
     (r"/hjsm", HjsmHandler),
     (r"/qf", QfHandler),
     (r"/tb", TbHandler),
+    (r"/yk", YkHandler),
     (r"/time", TimeHandler),
     (r"/dange/haokan", Dan_HaokanHandler),
     (r"/dange/tieba", Dan_TiebaHandler),
