@@ -18,23 +18,24 @@ def changeBase(n,b):
 
 def to_connect(key):
     global ws
-    ws[key] = create_connection("wss://selab.baidu.com/nv/answer.sock/?EIO=3&transport=websocket")
+    header = {'User-Agent': 'Mozilla/5.0 (Linux; Android 5.0; Samsung Galaxy S6 - 5.0.0 - API 21 - 1440x2560 Build/LRX21M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile Safari/537.36 SearchCraft/1.6.2 (Baidu; P1 5.0)',
+          'Cookie': 'BAIDUID=DFAB19B2EA574D3C16184EE5FB3DFC24:FG=1; BAIDUCUID=7F84EDC811B9B674C59DBFD5DB2E2067|000000000000000',
+          'Origin': 'https://secr.baidu.com',
+          'Host': 'selab.baidu.com'
+         }
+    url = "wss://selab.baidu.com/nv/answer.sock/\
+    ?xc=461df84f9425052f277326817299f973&EIO=3&transport=websocket"
+    ws[key] = create_connection(url,header=header)
     ws[key].recv()
     ws[key].recv()
     ws[key].send(b'21')
     ws[key].recv()
     ws[key].send('40/nv/{}/answer'.format(key).encode())
     ws[key].recv()
-    ws[key].send('42/nv/{}/answer'.format(key).encode())
     result =  ws[key].recv()
-
-    ws[key].send(b'2')
-    result =  ws[key].recv()
-    ws[key].send(b'2')
-    result =  ws[key].recv()
-    if result[:1] == '3':
+    if 'greet' in result:
         print("{} Connect Succeed".format(key))
-
+    ws[key].recv()
 def get_dange(key):
     first_time = 0
     to_connect(key)
