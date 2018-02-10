@@ -27,14 +27,14 @@ class Sougou(object):
         random_number_str = ''.join([str(random.randint(0,9)) for i in  range(16)])+'_{}'.format(int(time.time()*1000))
         self.jQuery_word = 'jQuery2000{}'.format(random_number_str)
         return {'key': self.key, 'wdcallback': self.jQuery_word,'_': int(time.time()*1000)}
-    
+
     @property
     def web_content_json(self):
         web_content = requests.get(self.url,params=self.payload,headers=self.headers,cookies=self.cookie)
         web_content_json = web_content.text.replace(self.jQuery_word,'').replace('\\','')
         result_base64 = re.findall('"result": "(.+?)"',web_content_json)[0]
         return str(json.loads(base64.b64decode(result_base64)))
-    
+
     def update(self):
         web_content_json = self.web_content_json
         if web_content_json.__len__() > 30:
@@ -49,7 +49,7 @@ class Sougou(object):
         else:
             self.result = ''
             self.summary = ''
-            
+
         if self.result:
             self.result_str = []
             self.result_str.append('结果 ：')
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     while True:
         start_time = time.time()
         try:
-            pool = ThreadPool(7)
+            pool = ThreadPool(8)
             results = pool.map(write,connect_way)
             pool.close()
             pool.join()
