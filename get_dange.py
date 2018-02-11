@@ -89,6 +89,6 @@ def main():
             print('Now:{}'.format(time.time()))
 
 if __name__ == "__main__":
-    connect_way = ['haokan','tieba','xiguashipin','huajiao','chongdingdahui','zhishichaoren','youku']
+    connect_way = ['haokan','weibo','xiguashipin','huajiao','chongdingdahui','zhishichaoren','youku']
     ws = {}
     main()
