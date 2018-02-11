@@ -30,21 +30,30 @@ class Sougou(object):
     
     @property
     def web_content_json(self):
-        web_content = requests.get(self.url,params=self.payload,headers=self.headers,cookies=self.cookie)
-        web_content_json = web_content.text.replace(self.jQuery_word,'').replace('\\','')
-        result_base64 = re.findall('"result": "(.+?)"',web_content_json)[0]
-        return str(json.loads(base64.b64decode(result_base64)))
+        try:
+            web_content = requests.get(self.url,params=self.payload,headers=self.headers,cookies=self.cookie)
+            web_content_json = web_content.text.replace(self.jQuery_word,'').replace('\\','')
+            result_base64 = re.findall('"result": "(.+?)"',web_content_json)[0]
+            return str(json.loads(base64.b64decode(result_base64)))
+        except:
+            return 'Something Wrong'
     
     def update(self):
         web_content_json = self.web_content_json
         if web_content_json.__len__() > 30:
-            try:
-                self.result = re.findall('result":"(.+?)","search_infos"',web_content_json)[-1]
-            except:
-                self.result = re.findall('result":"(.+?)"',web_content_json)[-1]
-            try:
-                self.summary = re.findall('summary":"(.*?)","title"',web_content_json)[-1]
-            except:
+            self.result = re.findall('result":"(.+?)","search_infos"',web_content_json)
+            if self.result:
+                self.result = self.result[-1]
+            else:
+                self.result = re.findall('result":"(.+?)"',web_content_json)
+                if self.result:
+                    self.result = self.result[-1]
+                else:
+                    self.result = ''
+            self.summary = re.findall('summary":"(.*?)","title"',web_content_json)
+            if self.summary:
+                self.summary = self.summary[-1]
+            else:
                 self.summary = ''
         else:
             self.result = ''
