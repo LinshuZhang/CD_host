@@ -76,6 +76,11 @@ class Dan_XiguashipinHandler(tornado.web.RequestHandler):
         with open('./dange/xiguashipin.html','r') as f:
             self.write(f.read())
 
+class Dan_WeiboHandler(tornado.web.RequestHandler):
+    def get(self):
+        with open('./dange/weibo.html','r') as f:
+            self.write(f.read())
+
 class Dan_HuajiaoHandler(tornado.web.RequestHandler):
     def get(self):
         with open('./dange/huajiao.html','r') as f:
@@ -114,6 +119,7 @@ application = tornado.web.Application([
     (r"/time", TimeHandler),
     (r"/dange/haokan", Dan_HaokanHandler),
     (r"/dange/xiguashipin", Dan_XiguashipinHandler),
+    (r"/dange/weibo", Dan_WeiboHandler)
     (r"/dange/huajiao", Dan_HuajiaoHandler),
     (r"/dange/chongdingdahui", Dan_ChongdingdahuiHandler),
     (r"/dange/zhishichaoren", Dan_ZhishichaorenHandler),
